@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Similarity Checker</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-6">
+            <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Semantic Similarity Checker</h1>
+            
+            <div class="space-y-6">
+                <div>
+                    <label for="sentence1" class="block text-sm font-medium text-gray-700">First Sentence</label>
+                    <textarea id="sentence1" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                </div>
+                
+                <div>
+                    <label for="sentence2" class="block text-sm font-medium text-gray-700">Second Sentence</label>
+                    <textarea id="sentence2" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                </div>
+                
+                <button onclick="checkSimilarity()" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Check Similarity
+                </button>
+                
+                <div id="result" class="hidden mt-6 p-4 rounded-md">
+                    <h2 class="text-lg font-semibold text-gray-800">Similarity Score:</h2>
+                    <p id="similarityScore" class="text-2xl font-bold text-indigo-600 mt-2"></p>
+                </div>
+                
+                <div id="error" class="hidden mt-6 p-4 bg-red-100 rounded-md">
+                    <p id="errorMessage" class="text-red-700"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function checkSimilarity() {
+            const sentence1 = document.getElementById('sentence1').value;
+            const sentence2 = document.getElementById('sentence2').value;
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+            const similarityScore = document.getElementById('similarityScore');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (!sentence1 || !sentence2) {
+                errorDiv.classList.remove('hidden');
+                resultDiv.classList.add('hidden');
+                errorMessage.textContent = 'Please enter both sentences';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/similarity', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sentence1,
+                        sentence2
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    errorDiv.classList.add('hidden');
+                    resultDiv.classList.remove('hidden');
+                    similarityScore.textContent = (data.similarity * 100).toFixed(2) + '%';
+                } else {
+                    throw new Error(data.detail || 'An error occurred');
+                }
+            } catch (error) {
+                errorDiv.classList.remove('hidden');
+                resultDiv.classList.add('hidden');
+                errorMessage.textContent = error.message;
+            }
+        }
+    </script>
+</body>
+</html> 
