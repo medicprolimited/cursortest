@@ -15,7 +15,15 @@ app = FastAPI()
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://apps.medicpro.london"],
+    allow_origins=[
+        "https://apps.medicpro.london",
+        "https://3ad9-184-154-216.ngrok-free.app",  # Correct URL from error message
+        "https://3ad9-5-154-184-216.ngrok-free.app", # URL from your HTML file
+        "http://localhost:3000",  # For local development if needed
+        "http://127.0.0.1:3000",  # For local development if needed
+        "http://localhost:5000",  # Common port for local development
+        "http://127.0.0.1:5000"   # Common port for local development
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
