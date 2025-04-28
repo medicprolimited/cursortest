@@ -18,10 +18,10 @@ app.add_middleware(
     allow_origins=[
         "https://apps.medicpro.london",
         "https://3ad9-184-154-216.ngrok-free.app",  # Correct URL from error message
-        "https://de54-5-154-184-216.ngrok-free.app", # URL from your HTML file
+        "https://2f76-5-154-184-216.ngrok-free.app", # URL from your HTML file
         "http://localhost:3000",  # For local development if needed
         "http://127.0.0.1:3000",  # For local development if needed
-        "http://localhost:5000",  # Common port for local development
+        "http://localhost:8000",  # Common port for local development
         "http://127.0.0.1:5000"   # Common port for local development
     ],
     allow_credentials=True,
